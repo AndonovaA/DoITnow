@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.doitnow.databinding.TodoItemBinding;
+import com.example.doitnow.db.AppDatabase;
 import com.example.doitnow.models.TodoItem;
 import java.util.List;
 
@@ -35,7 +36,6 @@ public class TodosRecyclerAdapter extends RecyclerView.Adapter<TodosRecyclerAdap
         return todosList.size();
     }
 
-    //this!!!
     public void updateList(List<TodoItem> todoList) {
         this.todosList = todoList;
         notifyDataSetChanged();
@@ -49,8 +49,8 @@ public class TodosRecyclerAdapter extends RecyclerView.Adapter<TodosRecyclerAdap
             this.binding = binding;
 
             this.binding.getRoot().setOnClickListener(event -> {
-                //TODO: OnClick listener za item od recycler view-ot na nivo na adapterot:
-//                AppDatabase.getAppDatabase().personDao().delete(todosList.get(getAdapterPosition()));
+                //OnClick listener za item od recycler view-ot na nivo na adapterot:
+                AppDatabase.getAppDatabase().todoDao().delete(todosList.get(getAdapterPosition()));
                 todosList.remove(getAdapterPosition());
                 notifyDataSetChanged();
             });

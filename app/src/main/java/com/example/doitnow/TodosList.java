@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
 import com.example.doitnow.databinding.ListTodosBinding;
+import com.example.doitnow.db.AppDatabase;
 import com.example.doitnow.models.TodoItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +46,8 @@ public class TodosList extends Fragment{
         // Initializing recycler view adapter
         todosList = new ArrayList<>();
 
-        //TODO: read from DB
-//        todosList.addAll(AppDatabase.getAppDatabase().personDao().getAll());
+        //read from DB
+        todosList.addAll(AppDatabase.getAppDatabase().todoDao().getAll());
 
         adapter = new TodosRecyclerAdapter(todosList);
         binding.recyclerView.setAdapter(adapter);
