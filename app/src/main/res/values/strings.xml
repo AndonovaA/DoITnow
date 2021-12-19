@@ -4,7 +4,11 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">TODOs</string>
     <string name="second_fragment_label">Add new todo</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
     <string name="no_todos">You don\'t have any todos</string>
+    <string name="addtodoaction">addTODO</string>
+    <string name="submit">Submit</string>
+    <string name="short_description">Short description</string>
+    <string name="location">Location</string>
+    <string name="title">Title</string>
+    <string name="description">description</string>
 </resources>
