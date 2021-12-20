@@ -1,6 +1,8 @@
 package com.example.doitnow;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +31,22 @@ public class TodosList extends Fragment{
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        binding = ListTodosBinding.inflate(inflater, container, false);
+
+        //TODO: remove the action bar from this fragment:
+        //create ContextThemeWrapper from the original Activity Context with the custom theme
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Theme_AppCompat_DayNight_NoActionBar);
+        // clone the inflater using the ContextThemeWrapper
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        // inflate the layout using the cloned inflater, not default inflater
+        binding = ListTodosBinding.inflate(localInflater, container, false);
+
         return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         init();
+        setComponents();
         binding.addTodo.setOnClickListener(view1 -> NavHostFragment.findNavController(TodosList.this)
                 .navigate(R.id.action_FirstFragment_to_SecondFragment));
     }
@@ -52,7 +62,10 @@ public class TodosList extends Fragment{
         adapter = new TodosRecyclerAdapter(todosList);
         binding.recyclerView.setAdapter(adapter);
 
-        setComponents();
+        // if there are todos items hide the text
+        if(todosList.size() > 0) {
+            binding.noTodosText.setVisibility(View.GONE);
+        }
     }
 
     private void setComponents() {

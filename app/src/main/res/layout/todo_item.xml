@@ -5,27 +5,36 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_title"
-        style="@style/item_ui_todo"
-        android:text="{{Title}}"
-        app:layout_constraintBottom_toTopOf="@+id/text_sort_description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.card.MaterialCardView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
-    <TextView
-        android:id="@+id/text_sort_description"
-        style="@style/item_ui_todo"
-        android:text="@string/short_description"
-        app:layout_constraintBottom_toTopOf="@+id/text_location"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_title" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/text_title"
+                style="@style/item_ui_todo"
+                android:text="@string/title"
+                app:layout_constraintBottom_toTopOf="@+id/text_sort_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/text_sort_description"
+                style="@style/item_ui_todo"
+                android:text="@string/short_description"
+                app:layout_constraintBottom_toTopOf="@+id/text_location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_title" />
+            <TextView
+                android:id="@+id/text_location"
+                style="@style/item_ui_todo"
+                android:text="@string/location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_sort_description" />
 
-    <TextView
-        android:id="@+id/text_location"
-        style="@style/item_ui_todo"
-        android:text="@string/location"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_sort_description" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

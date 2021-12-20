@@ -6,11 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".TodosList">
 
+    <TextView
+        android:id="@+id/todos_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/first_fragment_label"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="20dp"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/todos_id"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,7 +31,7 @@
         android:layout_marginBottom="20dp" />
 
     <TextView
-        android:id="@+id/textview_first"
+        android:id="@+id/no_todos_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_todos"

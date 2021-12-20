@@ -49,7 +49,7 @@ public class TodosRecyclerAdapter extends RecyclerView.Adapter<TodosRecyclerAdap
             this.binding = binding;
 
             this.binding.getRoot().setOnClickListener(event -> {
-                //OnClick listener za item od recycler view-ot na nivo na adapterot:
+                //OnClick listener za item od recycler view na nivo na adapter:
                 AppDatabase.getAppDatabase().todoDao().delete(todosList.get(getAdapterPosition()));
                 todosList.remove(getAdapterPosition());
                 notifyDataSetChanged();
