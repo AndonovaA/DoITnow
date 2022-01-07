@@ -19,7 +19,9 @@ import com.example.doitnow.models.TodoItem;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class refers to the FirstFragment.
+ */
 public class TodosList extends Fragment{
 
     private ListTodosBinding binding;
@@ -85,4 +87,9 @@ public class TodosList extends Fragment{
         binding = null;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.notifyDataSetChanged();
+    }
 }

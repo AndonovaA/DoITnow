@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
+/**
+ * This class refers to the SecondFragment.
+ */
 public class AddTodo extends Fragment {
 
     private TodoAddBinding binding;
@@ -69,7 +71,7 @@ public class AddTodo extends Fragment {
                 // TODO: change location
                 DatabaseInitializer.populateAsync(AppDatabase.getAppDatabase(), todosList, new TodoItem(title, description, ""));
 
-                //nazad kon first fragment
+                // back to the first fragment
                 NavHostFragment.findNavController(AddTodo.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
