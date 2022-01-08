@@ -12,4 +12,5 @@
     <string name="title">Title</string>
     <string name="description">description</string>
     <string name="done">Done</string>
+    <string name="logo">logo</string>
 </resources>
