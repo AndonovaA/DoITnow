@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
@@ -25,6 +26,7 @@ import java.util.List;
 public class TodosList extends Fragment{
 
     private ListTodosBinding binding;
+    private MainActivity mainActivity;
     TodosRecyclerAdapter adapter;
     List<TodoItem> todosList;
 
@@ -61,8 +63,12 @@ public class TodosList extends Fragment{
         //read from DB
         todosList.addAll(AppDatabase.getAppDatabase().todoDao().getAll());
 
-        adapter = new TodosRecyclerAdapter(todosList);
+        adapter = new TodosRecyclerAdapter(todosList, binding.getRoot().getContext());
         binding.recyclerView.setAdapter(adapter);
+
+        // Swipe left/right for edit/delete
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper(adapter));
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
 
         // if there are todos items hide the text
         if(todosList.size() > 0) {
