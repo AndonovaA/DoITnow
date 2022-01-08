@@ -4,55 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="20dp"
     tools:context=".AddTodo">
 
-    <LinearLayout
-        android:id="@+id/linear_layout_form"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:background="@drawable/border_edit_text"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/submit_item"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_title"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_edit_text"
-                android:hint="@string/title"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:background="@drawable/border_edit_text"
+            android:hint="@string/title"
+            android:inputType="textCapWords" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_description"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_description"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_input_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_description"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp">
+            android:gravity="top"
+            android:hint="@string/description"
+            android:inputType="text|textMultiLine"
+            android:textAlignment="gravity"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_description"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top"
-                app:hintEnabled="false"
-                android:inputType="text|textMultiLine"
-                android:textAlignment="gravity"
-                tools:ignore="SpeakableTextPresentCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.gms.maps.MapView
+        android:layout_width="match_parent"
+        android:id="@+id/maps"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_input_description"
+        app:layout_constraintBottom_toTopOf="@id/submit_item"/>
 
-    </LinearLayout>
+<!--    <androidx.fragment.app.FragmentContainerView-->
+<!--        android:id="@+id/mapps"-->
+<!--        android:name="com.example.doitnow.MapsFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/text_input_description"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/submit_item"/>-->
 
     <Button
         android:id="@+id/submit_item"

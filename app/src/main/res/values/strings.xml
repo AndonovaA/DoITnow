@@ -13,4 +13,6 @@
     <string name="description">description</string>
     <string name="done">Done</string>
     <string name="logo">logo</string>
+    <string name="provider_failed">Failed to found location</string>
+    <string name="your_location">you</string>
 </resources>
