@@ -15,4 +15,5 @@
     <string name="logo">logo</string>
     <string name="provider_failed">Failed to found location</string>
     <string name="your_location">you</string>
+    <string name="nearby_places">Nearby Places</string>
 </resources>

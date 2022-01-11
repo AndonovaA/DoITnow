@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.doitnow.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_nearby_places"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/nearby_places"
         app:showAsAction="never" />
 </menu>

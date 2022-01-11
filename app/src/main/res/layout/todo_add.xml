@@ -21,6 +21,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border_edit_text"
             android:hint="@string/title"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:textStyle="bold"
             android:inputType="textCapWords" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -35,13 +38,14 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_description"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="top"
+            android:background="@drawable/border_edit_text"
             android:hint="@string/description"
-            android:inputType="text|textMultiLine"
+            android:scrollHorizontally="false"
+            android:gravity="top"
             android:textAlignment="gravity"
+            android:inputType="text|textMultiLine"
             tools:ignore="SpeakableTextPresentCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,20 +53,11 @@
         android:layout_width="match_parent"
         android:id="@+id/maps"
         android:layout_height="0dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_input_description"
         app:layout_constraintBottom_toTopOf="@id/submit_item"/>
-
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/mapps"-->
-<!--        android:name="com.example.doitnow.MapsFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/text_input_description"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/submit_item"/>-->
 
     <Button
         android:id="@+id/submit_item"

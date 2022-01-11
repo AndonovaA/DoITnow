@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -32,11 +34,10 @@ public class TodosList extends Fragment{
 
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //TODO: remove the action bar from this fragment:
+        //Needed for removing the menu options:
+        setHasOptionsMenu(true);
         //create ContextThemeWrapper from the original Activity Context with the custom theme
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Theme_AppCompat_DayNight_NoActionBar);
         // clone the inflater using the ContextThemeWrapper
@@ -85,6 +86,12 @@ public class TodosList extends Fragment{
                 ((LinearLayoutManager) mLayoutManager).getOrientation()
         );
         binding.recyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.removeItem(R.id.action_nearby_places);
     }
 
     @Override
