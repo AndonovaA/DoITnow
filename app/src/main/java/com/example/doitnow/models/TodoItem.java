@@ -14,16 +14,21 @@ public class TodoItem {
     private String title;
     @ColumnInfo(name = "todo_body")
     private String description;
-    @ColumnInfo(name = "todo_address")
-    private String location;
+    @ColumnInfo(name = "todo_latitude")
+    private String locationLat;
+    @ColumnInfo(name = "todo_longitude")
+    private String locationLng;
 
-    public TodoItem(String title, String description, String location) {
+    public TodoItem(String title, String description, String locationLat, String locationLng) {
         this.title = title;
         this.description = description;
-        this.location = location;
+        this.locationLat = locationLat;
+        this.locationLng = locationLng;
     }
 
-    public void setID(int ID) { this.ID = ID; }
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
     public int getID() {
         return ID;
@@ -45,11 +50,19 @@ public class TodoItem {
         this.description = description;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationLat() {
+        return locationLat;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationLat(String locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public String getLocationLng() {
+        return locationLng;
+    }
+
+    public void setLocationLng(String locationLng) {
+        this.locationLng = locationLng;
     }
 }

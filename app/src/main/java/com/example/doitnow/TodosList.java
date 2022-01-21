@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
 import com.example.doitnow.databinding.ListTodosBinding;
 import com.example.doitnow.db.AppDatabase;
+import com.example.doitnow.helpers.RecyclerItemTouchHelper;
 import com.example.doitnow.models.TodoItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,6 @@ import java.util.List;
 public class TodosList extends Fragment{
 
     private ListTodosBinding binding;
-    private MainActivity mainActivity;
     TodosRecyclerAdapter adapter;
     List<TodoItem> todosList;
 

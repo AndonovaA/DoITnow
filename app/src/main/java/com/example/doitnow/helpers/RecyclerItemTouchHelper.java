@@ -1,4 +1,4 @@
-package com.example.doitnow;
+package com.example.doitnow.helpers;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -9,6 +9,8 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.doitnow.R;
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
 
 

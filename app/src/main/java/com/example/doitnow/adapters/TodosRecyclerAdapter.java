@@ -3,13 +3,14 @@ package com.example.doitnow.adapters;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.doitnow.MainActivity;
 import com.example.doitnow.databinding.TodoItemBinding;
 import com.example.doitnow.db.AppDatabase;
 import com.example.doitnow.models.TodoItem;
+
 import java.util.List;
 
 
@@ -18,8 +19,8 @@ public class TodosRecyclerAdapter extends RecyclerView.Adapter<TodosRecyclerAdap
     List<TodoItem> todosList;
     private Context activity;
 
-    public TodosRecyclerAdapter(List<TodoItem> personList, Context activity) {
-        this.todosList = personList;
+    public TodosRecyclerAdapter(List<TodoItem> todosList, Context activity) {
+        this.todosList = todosList;
         this.activity = activity;
     }
 
@@ -32,8 +33,6 @@ public class TodosRecyclerAdapter extends RecyclerView.Adapter<TodosRecyclerAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.binding.textTitle.setText(todosList.get(position).getTitle());
-        holder.binding.textSortDescription.setText(todosList.get(position).getDescription());
-        holder.binding.textLocation.setText(todosList.get(position).getLocation());
     }
 
     @Override

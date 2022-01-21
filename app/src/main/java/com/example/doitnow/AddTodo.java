@@ -1,12 +1,14 @@
 package com.example.doitnow;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,20 +27,22 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
-import com.example.doitnow.databinding.CustomInfoContentsBinding;
 import com.example.doitnow.databinding.ListTodosBinding;
 import com.example.doitnow.databinding.TodoAddBinding;
 import com.example.doitnow.db.AppDatabase;
+import com.example.doitnow.helpers.GeofenceHelper;
 import com.example.doitnow.models.TodoItem;
 import com.example.doitnow.utils.DatabaseInitializer;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -66,6 +70,7 @@ public class AddTodo extends Fragment {
     List<TodoItem> todosList;
 
     private LocationManager locationManager;
+    boolean mLocationPermissionGranted;
 
     private static final int LOCATION_MIN_UPDATE_TIME = 10;
     private static final int LOCATION_MIN_UPDATE_DISTANCE = 1000;
@@ -73,6 +78,7 @@ public class AddTodo extends Fragment {
 
     private MapView mapView;
     private GoogleMap googleMap;
+
     // The geographical location where the device is currently located.
     private Location location = null;
 
@@ -84,12 +90,17 @@ public class AddTodo extends Fragment {
 
     // Used for selecting the current place.
     private static final int M_MAX_ENTRIES = 5;
+
+    // Used for nearby places.
     private String[] likelyPlaceNames;
     private String[] likelyPlaceAddresses;
     private List[] likelyPlaceAttributions;
     private LatLng[] likelyPlaceLatLongs;
 
-    CustomInfoContentsBinding infoWindowBinding;
+    // Geofencing
+    private GeofencingClient geofencingClient;
+    private GeofenceHelper geofenceHelper;
+    private final float GEOFENCE_RADIUS = 200;    // meters
 
 
     private final LocationListener locationListener = new LocationListener() {
@@ -101,17 +112,14 @@ public class AddTodo extends Fragment {
 
         @Override
         public void onStatusChanged(String s, int i, Bundle bundle) {
-
         }
 
         @Override
         public void onProviderEnabled(String s) {
-
         }
 
         @Override
         public void onProviderDisabled(String s) {
-
         }
     };
 
@@ -120,7 +128,6 @@ public class AddTodo extends Fragment {
         setHasOptionsMenu(true);
         binding = TodoAddBinding.inflate(inflater, container, false);
         todosBinding = ListTodosBinding.inflate(inflater, container, false);
-        infoWindowBinding = CustomInfoContentsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -137,14 +144,14 @@ public class AddTodo extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_nearby_places){
+        if (item.getItemId() == R.id.action_nearby_places) {
             showNearbyPlaces();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void init (Bundle savedInstanceState) {
+    private void init(Bundle savedInstanceState) {
         // Construct a PlacesClient
         Places.initialize(App.mContext, getResources().getString(R.string.google_maps_key));
         placesClient = Places.createClient(App.mContext);
@@ -153,38 +160,58 @@ public class AddTodo extends Fragment {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(App.mContext);
 
         // initialize the Location Manager:
-        Toast.makeText(App.mContext,"Detecting current location..",Toast.LENGTH_LONG).show();
         locationManager = (LocationManager) App.mContext.getSystemService(Context.LOCATION_SERVICE);
         mapView = binding.maps;
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this::mapView_onMapReady);
+
+        // Initialize the geofencing client and helper
+        geofencingClient = LocationServices.getGeofencingClient(App.mContext);
+        geofenceHelper = new GeofenceHelper(App.mContext);
 
         // Get the recycler view adapter:
         todosList = new ArrayList<>();
         adapter = (TodosRecyclerAdapter) todosBinding.recyclerView.getAdapter();
     }
 
-    private void setListeners () {
+    private void setListeners() {
 
         binding.submitItem.setOnClickListener(view1 -> {
             List<Boolean> pass = new ArrayList<>();
             // input validation
-            if (binding.editTextTitle.getText().toString().trim().length() == 0) {
-                binding.editTextTitle.setError("Required");
-                pass.add(false);
+            if (binding.editTextTitle.getText() != null) {
+                if (binding.editTextTitle.getText().toString().trim().length() == 0) {
+                    binding.editTextTitle.setError("Required");
+                    pass.add(false);
+                }
             }
-            if (binding.editTextDescription.getText().toString().trim().length() == 0) {
-                binding.editTextDescription.setError("Required");
-                pass.add(false);
+            if (binding.editTextDescription.getText() != null) {
+                if (binding.editTextDescription.getText().toString().trim().length() == 0) {
+                    binding.editTextDescription.setError("Required");
+                    pass.add(false);
+                }
             }
-            if(pass.size() == 0 ){
+            if (binding.editTextLatitude.getText() != null) {
+                if (binding.editTextLatitude.getText().toString().trim().length() == 0) {
+                    pass.add(false);
+                }
+            }
+            if (binding.editTextLongitude.getText() != null) {
+                if (binding.editTextLongitude.getText().toString().trim().length() == 0) {
+                    pass.add(false);
+                }
+            }
+            if (pass.size() == 0) {
                 // validation pass, create entity record
                 String title = binding.editTextTitle.getText().toString().trim();
                 String description = binding.editTextDescription.getText().toString().trim();
+                String latitude = binding.editTextLatitude.getText().toString().trim();
+                String longitude = binding.editTextLongitude.getText().toString().trim();
 
-                //dodavanje na nov podatok za TodoItem i vo listata i vo bazata
-                // TODO: change location
-                DatabaseInitializer.populateAsync(AppDatabase.getAppDatabase(), todosList, new TodoItem(title, description, ""));
+                // adding new TodoItem in the array and the database:
+                DatabaseInitializer.populateAsync(AppDatabase.getAppDatabase(), todosList, new TodoItem(title, description, latitude, longitude));
+                // adding geofence for location with Lat: latitude and Lng: longitude:
+                addGeofence(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)), GEOFENCE_RADIUS, title);
 
                 // back to the first fragment
                 NavHostFragment.findNavController(AddTodo.this)
@@ -194,20 +221,24 @@ public class AddTodo extends Fragment {
     }
 
     private void initMap() {
-        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(binding.maps.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (googleMap != null) {
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setAllGesturesEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
-                // set onClick listener for the map:
+
+                // set onClick listener for the map to choose location for the todo:
                 googleMap.setOnMapClickListener(latLng -> {
                     googleMap.clear();
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                     googleMap.addMarker(markerOptions);
-                    // TODO: zemi lokacija od ovde
+                    // fill the latitude and longitude input fields:
+                    binding.editTextLatitude.setText(String.valueOf(latLng.latitude));
+                    binding.editTextLongitude.setText(String.valueOf(latLng.longitude));
                 });
             }
         } else {
@@ -221,7 +252,8 @@ public class AddTodo extends Fragment {
     }
 
     private void getCurrentLocation() {
-        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             if (!isGPSEnabled && !isNetworkEnabled) {
@@ -251,7 +283,8 @@ public class AddTodo extends Fragment {
     }
 
     private void showNearbyPlaces() {
-        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(binding.maps.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (googleMap != null) {
 
                 // Use fields to define the data types to return.
@@ -265,7 +298,7 @@ public class AddTodo extends Fragment {
                 // are the best match for the device's current location.
                 final Task<FindCurrentPlaceResponse> placeResult = placesClient.findCurrentPlace(request);
 
-                placeResult.addOnCompleteListener (task -> {
+                placeResult.addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
 
                         FindCurrentPlaceResponse likelyPlaces = task.getResult();
@@ -296,12 +329,10 @@ public class AddTodo extends Fragment {
                                 break;
                             }
                         }
-
                         // Show a dialog offering the user the list of likely places, and add a
                         // marker at the selected place.
                         openPlacesDialog();
-                    }
-                    else {
+                    } else {
                         Log.e(TAG, "Exception: %s", task.getException());
                     }
                 });
@@ -341,9 +372,10 @@ public class AddTodo extends Fragment {
                     DEFAULT_ZOOM));
 
             // TODO: zemi lokacija od ovde
+            Toast.makeText(App.mContext, markerSnippet, Toast.LENGTH_SHORT).show();
         };
 
-        // Display the dialog.
+        // Display the dialog:
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle("Pick a place")
                 .setItems(likelyPlaceNames, listener)
@@ -354,22 +386,6 @@ public class AddTodo extends Fragment {
         this.googleMap = googleMap;
         initMap();
         getCurrentLocation();
-
-        // Use a custom info window adapter to handle multiple lines of text in the info window contents
-        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            @Override
-            // Return null here, so that getInfoContents() is called next.
-            public View getInfoWindow(@NonNull Marker arg0) {
-                return null;
-            }
-            @Override
-            public View getInfoContents(@NonNull Marker marker) {
-                infoWindowBinding.title.setText(marker.getTitle());
-                infoWindowBinding.snippet.setText(marker.getSnippet());
-                return infoWindowBinding.getRoot();
-            }
-        });
     }
 
     private void drawMarker(Location location, String title) {
@@ -385,6 +401,38 @@ public class AddTodo extends Fragment {
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
         }
     }
+
+
+    private void addGeofence(LatLng latLng, float radius, String todoTitle) {
+
+        getLocationPermission();
+
+        String geofenceID = App.APP_CODE + todoTitle.replace(" ", "-");
+        Geofence geofence = geofenceHelper.getGeofence(geofenceID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER |
+                Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
+
+        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
+        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+
+        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(App.mContext, "Please go to app setting to allow FINE location permissions!", Toast.LENGTH_LONG).show();
+        }
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            if(ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(App.mContext, "Please go to app setting to allow BACKGROUND location permissions!", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "Geofence added. ID: " + geofenceID);
+                })
+                .addOnFailureListener(e -> {
+                    String errorMessage = geofenceHelper.getErrorString(e);
+                    Log.d(TAG, "addGeofence onFailure: " + errorMessage);
+                });
+    }
+
 
     @Override
     public void onResume() {
@@ -404,5 +452,23 @@ public class AddTodo extends Fragment {
         super.onDestroyView();
         binding = null;
         mapView.onDestroy();
+    }
+
+
+    private void getLocationPermission() {
+        /* TODO
+         * Request location permission (depending od API number), so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult. And turn the location on if permissions granted.
+         */
+
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            if(ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 14);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(App.mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
+        }
     }
 }

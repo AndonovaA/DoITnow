@@ -16,4 +16,6 @@
     <string name="provider_failed">Failed to found location</string>
     <string name="your_location">you</string>
     <string name="nearby_places">Nearby Places</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
 </resources>
