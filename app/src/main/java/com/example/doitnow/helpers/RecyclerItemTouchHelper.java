@@ -1,12 +1,15 @@
 package com.example.doitnow.helpers;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.doitnow.App;
 import com.example.doitnow.R;
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
+import com.example.doitnow.models.TodoItem;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
 
 
 /**
@@ -49,8 +58,25 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
             builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    adapter.deleteItem(position);
-                    // TODO: remove geofence
+                    // remove the geofence first:
+                    TodoItem todoItem = adapter.getTodoItem(position);
+                    String geofenceId = todoItem.getGeofenceID();
+                    ArrayList<String> geofenceIDs = new ArrayList<String>() {{ add(geofenceId); }};
+                    Task<Void> removeGeofenceTask = geofencingClient.removeGeofences(geofenceIDs);
+                    removeGeofenceTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("RecyclerItemTouchHelper", "Successfully deleted geofence.");
+                        }
+                    });
+                    removeGeofenceTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("RecyclerItemTouchHelper", "Failed to delete geofence.");
+                        }
+                    });
+                    // remove the item from the recycler view
+                    adapter.deleteItem(position);   // this will also delete the item from the DB
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

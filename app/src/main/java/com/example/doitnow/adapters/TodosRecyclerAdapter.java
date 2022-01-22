@@ -49,8 +49,13 @@ public class TodosRecyclerAdapter extends RecyclerView.Adapter<TodosRecyclerAdap
         notifyDataSetChanged();
     }
 
+    public TodoItem getTodoItem(int position){
+        return todosList.get(position);
+    }
+
     public void deleteItem(int position){
         TodoItem item = todosList.get(position);
+        // delete the item from the database
         AppDatabase.getAppDatabase().todoDao().delete(item);
         todosList.remove(position);
         notifyItemRemoved(position);
