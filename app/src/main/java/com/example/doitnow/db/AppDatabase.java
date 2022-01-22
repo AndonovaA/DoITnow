@@ -12,11 +12,10 @@ import com.example.doitnow.models.TodoItem;
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract TodoDao todoDao();
-    private static AppDatabase INSTANCE; //instanca od bazata
+    private static AppDatabase INSTANCE;
 
     public static AppDatabase getAppDatabase() {
         if (INSTANCE == null) {
-            //kreirame instanca od bazata
             INSTANCE = Room.databaseBuilder(App.mContext, AppDatabase.class, "doITnow")
                     .allowMainThreadQueries()
                     .build();

@@ -14,16 +14,13 @@ public class TodoItem {
     private String title;
     @ColumnInfo(name = "todo_body")
     private String description;
-    @ColumnInfo(name = "todo_latitude")
-    private String locationLat;
-    @ColumnInfo(name = "todo_longitude")
-    private String locationLng;
+    @ColumnInfo(name = "todo_geofence_id")
+    private String geofenceID;
 
-    public TodoItem(String title, String description, String locationLat, String locationLng) {
+    public TodoItem(String title, String description, String geofenceID) {
         this.title = title;
         this.description = description;
-        this.locationLat = locationLat;
-        this.locationLng = locationLng;
+        this.geofenceID = geofenceID;
     }
 
     public void setID(int ID) {
@@ -50,19 +47,11 @@ public class TodoItem {
         this.description = description;
     }
 
-    public String getLocationLat() {
-        return locationLat;
+    public String getGeofenceID() {
+        return geofenceID;
     }
 
-    public void setLocationLat(String locationLat) {
-        this.locationLat = locationLat;
-    }
-
-    public String getLocationLng() {
-        return locationLng;
-    }
-
-    public void setLocationLng(String locationLng) {
-        this.locationLng = locationLng;
+    public void setGeofenceID(String geofenceID) {
+        this.geofenceID = geofenceID;
     }
 }

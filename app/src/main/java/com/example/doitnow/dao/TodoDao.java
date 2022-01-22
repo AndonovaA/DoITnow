@@ -12,7 +12,7 @@ import java.util.List;
 
 /***
  * DAO - Data Access Object
- * za definiranje na site CRUD operacii vrz tabelata todoItem:
+ * For defining CRUD operations on the table todoItem:
  */
 
 @Dao

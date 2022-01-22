@@ -42,6 +42,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     adapter.deleteItem(position);
+                    // TODO: remove geofence
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
