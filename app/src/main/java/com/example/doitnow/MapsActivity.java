@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +33,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -200,7 +198,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // back to MainActivity
                 Intent returnIntent = new Intent(MapsActivity.this, MainActivity.class);
-//                returnIntent.putExtra("result", "success"); //Optional parameters
                 MapsActivity.this.startActivity(returnIntent);
             }
         });
@@ -227,7 +224,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void handleMapLongClick(LatLng latLng) {
         addMarker(latLng);
-        addCircle(latLng, GEOFENCE_RADIUS);
+//        addCircle(latLng, GEOFENCE_RADIUS);
         // fill the latitude and longitude input fields:
         binding.editTextLatitude.setText(String.valueOf(latLng.latitude));
         binding.editTextLongitude.setText(String.valueOf(latLng.longitude));
@@ -263,13 +260,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void addCircle(LatLng latLng, float radius) {
-        CircleOptions circleOptions = new CircleOptions();
-        circleOptions.center(latLng);
-        circleOptions.radius(radius);
-        circleOptions.strokeColor(Color.argb(255, 255, 0,0));
-        circleOptions.fillColor(Color.argb(64, 255, 0,0));
-        circleOptions.strokeWidth(4);
-        mMap.addCircle(circleOptions);
-    }
+//    private void addCircle(LatLng latLng, float radius) {
+//        CircleOptions circleOptions = new CircleOptions();
+//        circleOptions.center(latLng);
+//        circleOptions.radius(radius);
+//        circleOptions.strokeColor(Color.argb(255, 255, 0,0));
+//        circleOptions.fillColor(Color.argb(64, 255, 0,0));
+//        circleOptions.strokeWidth(4);
+//        mMap.addCircle(circleOptions);
+//    }
 }

@@ -48,10 +48,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                     String geofenceID = geofence.getRequestId();
                     TodoItem todoItem = DatabaseInitializer.getTodo(AppDatabase.getAppDatabase(), geofenceID);
                     if (todoItem != null) {
-                        String todoTitle = todoItem.getTitle();
-                        String todoDescription = todoItem.getDescription();
-                        Log.d(TAG, todoTitle);
-                        notificationHelper.sendHighPriorityNotification(todoTitle, todoDescription, com.example.doitnow.MapsActivity.class);
+                        Log.d(TAG, todoItem.getTitle());
+                        notificationHelper.sendHighPriorityNotification(todoItem);
                     }
                 }
                 break;

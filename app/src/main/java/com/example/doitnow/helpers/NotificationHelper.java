@@ -14,7 +14,10 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.doitnow.App;
 import com.example.doitnow.R;
+import com.example.doitnow.TodoItemDetailsActivity;
+import com.example.doitnow.models.TodoItem;
 
 import java.util.Random;
 
@@ -30,38 +33,42 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     private String CHANNEL_NAME = "High priority channel";
-    private String CHANNEL_ID = "com.example.notifications" + CHANNEL_NAME;
+    private String CHANNEL_ID = "com.example.doitnow" + CHANNEL_NAME;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createChannels() {
         NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
         notificationChannel.enableLights(true);
         notificationChannel.enableVibration(true);
-        notificationChannel.setDescription("this is the description of the channel.");
-        notificationChannel.setLightColor(Color.RED);
+        notificationChannel.setDescription("This is the description of the channel.");
+        notificationChannel.setLightColor(Color.CYAN);
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.createNotificationChannel(notificationChannel);
     }
 
-    public void sendHighPriorityNotification(String title, String body, Class activityName) {
+    public void sendHighPriorityNotification(TodoItem todoItem) {
 
-        Intent intent = new Intent(this, activityName);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        int NOTIFICATION_ID = new Random().nextInt();
+
+        Intent intent = new Intent(this, TodoItemDetailsActivity.class);
+        intent.putExtra("TodoTitle", todoItem.getTitle());
+        intent.putExtra("TodoDescription", todoItem.getDescription());
+        intent.putExtra("TodoGeofenceId", todoItem.getGeofenceID());
+        PendingIntent pendingIntent = PendingIntent
+                .getActivity(this, App.APP_UNIQUE_NUMBER, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setContentTitle(title)
-//                .setContentText(body)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.mipmap.ic_launcher_logo)
+                .setContentTitle(todoItem.getTitle())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
+                .setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(todoItem.getTitle()).bigText(todoItem.getDescription()))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
 
-        NotificationManagerCompat.from(this).notify(new Random().nextInt(), notification);
-
-
+        NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, notification);
     }
 
 }

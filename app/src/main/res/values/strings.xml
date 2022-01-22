@@ -19,4 +19,6 @@
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
     <string name="title_activity_maps">Map</string>
+    <string name="todo_item_details">TodoDetails</string>
+    <string name="update">Update</string>
 </resources>

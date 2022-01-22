@@ -36,12 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
         init();
         setComponents();
-        binding.addTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
-                MainActivity.this.startActivity(myIntent);
-            }
+        binding.addTodo.setOnClickListener(view -> {
+            Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
+            MainActivity.this.startActivity(myIntent);
         });
     }
 
