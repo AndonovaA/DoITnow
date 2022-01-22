@@ -6,12 +6,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.doitnow.App;
 import com.example.doitnow.R;
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationServices;
 
 
 /**
@@ -20,10 +24,14 @@ import com.example.doitnow.adapters.TodosRecyclerAdapter;
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     private TodosRecyclerAdapter adapter;
+    private GeofencingClient geofencingClient;
+    private GeofenceHelper geofenceHelper;
 
     public RecyclerItemTouchHelper(TodosRecyclerAdapter adapter){
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.adapter = adapter;
+        this.geofencingClient = LocationServices.getGeofencingClient(App.mContext);
+        this.geofenceHelper = new GeofenceHelper(App.mContext);
     }
 
     @Override
@@ -37,7 +45,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         if(direction == ItemTouchHelper.LEFT){
             AlertDialog.Builder builder = new AlertDialog.Builder(adapter.getContext());
             builder.setTitle("Delete Task");
-            builder.setMessage("Are you sure you want to delete delete this Task?");
+            builder.setMessage("Are you sure you want to delete this Task?");
             builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {

@@ -35,4 +35,8 @@ public interface TodoDao {
 
     @Query("delete from todoItem")
     void deleteAll();
+
+    @Query("SELECT * from todoItem WHERE todo_geofence_id == :geofenceId")
+    TodoItem getItemByGeofence(String geofenceId);  // if query has no results will return null
+
 }

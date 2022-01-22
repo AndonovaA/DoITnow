@@ -13,6 +13,10 @@ public class DatabaseInitializer {
         todosList.add(db.todoDao().getLastOne());
     }
 
+    public static TodoItem getTodo(final AppDatabase db, String geofenceId){
+        return db.todoDao().getItemByGeofence(geofenceId);  // the return value can be null
+    }
+
 
     public static void populateAsync(AppDatabase db, List<TodoItem> todosList, TodoItem item) {
         new PopulateAsync(db, todosList, item).execute();

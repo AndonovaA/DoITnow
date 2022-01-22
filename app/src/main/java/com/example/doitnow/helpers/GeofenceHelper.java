@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 
+import com.example.doitnow.App;
 import com.example.doitnow.GeofenceBroadcastReceiver;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.Geofence;
@@ -45,7 +46,7 @@ public class GeofenceHelper extends ContextWrapper {
             return pendingIntent;
         }
         Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 222122212, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(this, App.APP_UNIQUE_NUMBER, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return pendingIntent;
     }

@@ -3,24 +3,29 @@ package com.example.doitnow;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.example.doitnow.db.AppDatabase;
+import com.example.doitnow.helpers.NotificationHelper;
+import com.example.doitnow.models.TodoItem;
+import com.example.doitnow.utils.DatabaseInitializer;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
 import java.util.List;
 
+
+
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "GeofenceBroadcastReceiv";
+    private static final String TAG = "GeofenceBroadcast";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // This method is called when the BroadcastReceiver is receiving an Intent broadcast:
 
         NotificationHelper notificationHelper = new NotificationHelper(context);
-
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
         if (geofencingEvent.hasError()) {
@@ -30,23 +35,31 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
         for (Geofence geofence: geofenceList) {
-            Log.d(TAG, "Receiver: onReceive: RequestID: " + geofence.getRequestId());
+            Log.d(TAG, "Receiver: RequestID: " + geofence.getRequestId());
         }
-//        Location location = geofencingEvent.getTriggeringLocation();
+
+        Location location = geofencingEvent.getTriggeringLocation();
         int transitionType = geofencingEvent.getGeofenceTransition();
 
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
-                Toast.makeText(context, "GEOFENCE_TRANSITION_ENTER", Toast.LENGTH_SHORT).show();
-                notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_ENTER", "", com.example.doitnow.MapsActivity.class);
+                Log.d(TAG, "Receiver: GEOFENCE_TRANSITION_ENTER");
+                for (Geofence geofence: geofenceList) {
+                    String geofenceID = geofence.getRequestId();
+                    TodoItem todoItem = DatabaseInitializer.getTodo(AppDatabase.getAppDatabase(), geofenceID);
+                    if (todoItem != null) {
+                        String todoTitle = todoItem.getTitle();
+                        String todoDescription = todoItem.getDescription();
+                        Log.d(TAG, todoTitle);
+                        notificationHelper.sendHighPriorityNotification(todoTitle, todoDescription, com.example.doitnow.MapsActivity.class);
+                    }
+                }
                 break;
             case Geofence.GEOFENCE_TRANSITION_DWELL:
-                Toast.makeText(context, "GEOFENCE_TRANSITION_DWELL", Toast.LENGTH_SHORT).show();
-                notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_DWELL", "", com.example.doitnow.MapsActivity.class);
+                Log.d(TAG, "Receiver: GEOFENCE_TRANSITION_DWELL");
                 break;
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                Toast.makeText(context, "GEOFENCE_TRANSITION_EXIT", Toast.LENGTH_SHORT).show();
-                notificationHelper.sendHighPriorityNotification("GEOFENCE_TRANSITION_EXIT", "", com.example.doitnow.MapsActivity.class);
+                Log.d(TAG, "Receiver: GEOFENCE_TRANSITION_EXIT");
                 break;
         }
 
