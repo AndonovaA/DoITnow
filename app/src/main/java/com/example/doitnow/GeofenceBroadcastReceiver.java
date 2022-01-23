@@ -47,6 +47,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 for (Geofence geofence: geofenceList) {
                     String geofenceID = geofence.getRequestId();
                     TodoItem todoItem = DatabaseInitializer.getTodo(AppDatabase.getAppDatabase(), geofenceID);
+                    // this todoItem has valid ID
                     if (todoItem != null) {
                         Log.d(TAG, todoItem.getTitle());
                         notificationHelper.sendHighPriorityNotification(todoItem);

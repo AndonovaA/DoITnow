@@ -198,6 +198,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // back to MainActivity
                 Intent returnIntent = new Intent(MapsActivity.this, MainActivity.class);
+                returnIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 MapsActivity.this.startActivity(returnIntent);
             }
         });

@@ -2,6 +2,7 @@ package com.example.doitnow.helpers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.doitnow.App;
 import com.example.doitnow.R;
+import com.example.doitnow.TodoItemDetailsActivity;
 import com.example.doitnow.adapters.TodosRecyclerAdapter;
 import com.example.doitnow.models.TodoItem;
 import com.google.android.gms.location.GeofencingClient;
@@ -81,7 +83,18 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
             dialog.show();
         }
         else {
-            // TODO: Open TodoItemDetailsActivity
+            // Open TodoItemDetailsActivity for UPDATING/EDITING the todoItem
+            TodoItem todoItem = adapter.getTodoItem(position);
+
+            Log.d("RecyclerTouchHelper", String.valueOf(todoItem.getID()));
+
+            Intent detailsTodoActivityIntent = new Intent();
+            detailsTodoActivityIntent.putExtra("TodoID", todoItem.getID());
+            detailsTodoActivityIntent.putExtra("TodoTitle", todoItem.getTitle());
+            detailsTodoActivityIntent.putExtra("TodoDescription", todoItem.getDescription());
+            detailsTodoActivityIntent.putExtra("TodoGeofenceId", todoItem.getGeofenceID());
+            detailsTodoActivityIntent.setClass(this.adapter.getContext(), TodoItemDetailsActivity.class);
+            this.adapter.getContext().startActivity(detailsTodoActivityIntent);
         }
     }
 

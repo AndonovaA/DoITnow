@@ -53,6 +53,7 @@ public class NotificationHelper extends ContextWrapper {
         int NOTIFICATION_ID = new Random().nextInt();
 
         Intent intent = new Intent(this, TodoItemDetailsActivity.class);
+        intent.putExtra("TodoID", todoItem.getID());
         intent.putExtra("TodoTitle", todoItem.getTitle());
         intent.putExtra("TodoDescription", todoItem.getDescription());
         intent.putExtra("TodoGeofenceId", todoItem.getGeofenceID());

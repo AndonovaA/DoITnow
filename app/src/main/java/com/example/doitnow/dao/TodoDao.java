@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.doitnow.models.TodoItem;
 
@@ -38,5 +39,8 @@ public interface TodoDao {
 
     @Query("SELECT * from todoItem WHERE todo_geofence_id == :geofenceId")
     TodoItem getItemByGeofence(String geofenceId);  // if query has no results will return null
+
+    @Update
+    void update(TodoItem todoItem);
 
 }
