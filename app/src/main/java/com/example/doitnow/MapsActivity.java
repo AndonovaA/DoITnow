@@ -61,6 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private float GEOFENCE_RADIUS = 150;    // meters
     private int FINE_LOCATION_ACCESS_REQUEST_CODE = 10001;
     private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 10002;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
 
     @Override
@@ -209,7 +210,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (Build.VERSION.SDK_INT >= 29) {
             //We need background permission
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                handleMapLongClick(latLng);
+                handleMapClick(latLng);
             } else {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
                     //We show a dialog and ask for permission
@@ -219,11 +220,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         } else {
-            handleMapLongClick(latLng);
+            handleMapClick(latLng);
         }
     }
 
-    private void handleMapLongClick(LatLng latLng) {
+    private void handleMapClick(LatLng latLng) {
         addMarker(latLng);
 //        addCircle(latLng, GEOFENCE_RADIUS);
         // fill the latitude and longitude input fields:
@@ -270,4 +271,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        circleOptions.strokeWidth(4);
 //        mMap.addCircle(circleOptions);
 //    }
+
 }

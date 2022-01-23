@@ -13,13 +13,13 @@
         android:layout_margin="15dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_edit_text"
             android:hint="@string/title"
             android:imeOptions="actionNext"
             android:maxLines="1"
@@ -35,13 +35,13 @@
         android:layout_margin="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_input_title">
+        app:layout_constraintTop_toBottomOf="@id/text_input_title"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/border_edit_text"
             android:hint="@string/description"
             android:scrollHorizontally="false"
             android:gravity="top"
@@ -55,7 +55,9 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_input_description"
@@ -65,7 +67,8 @@
         android:id="@+id/text_input_latitude"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/text_input_longitude"
         app:layout_constraintBottom_toTopOf="@id/submit_item">
@@ -73,7 +76,6 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_latitude"
             android:layout_width="match_parent"
-            android:background="@drawable/border_edit_text"
             android:layout_height="match_parent"
             android:textSize="10sp"
             android:hint="@string/latitude" />
@@ -83,7 +85,8 @@
         android:id="@+id/text_input_longitude"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_margin="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         app:layout_constraintStart_toEndOf="@id/text_input_latitude"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/submit_item">
@@ -92,7 +95,6 @@
             android:id="@+id/edit_text_longitude"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/border_edit_text"
             android:textSize="10sp"
             android:hint="@string/longitude" />
     </com.google.android.material.textfield.TextInputLayout>
