@@ -1,5 +1,6 @@
 package com.example.doitnow.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -67,6 +68,16 @@ public class TodosRecyclerAdapter extends RecyclerView.Adapter<TodosRecyclerAdap
         public ViewHolder(TodoItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            binding.getRoot().setOnLongClickListener(view -> {
+                TodoItem todoItem = todosList.get(getAdapterPosition());
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(todoItem.getTitle());
+                builder.setMessage(todoItem.getDescription());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return true;
+            });
         }
     }
 }
