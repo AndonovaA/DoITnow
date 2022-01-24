@@ -1,3 +1,4 @@
 <resources>
+<!--    TODO: In this string resource put your own Google API key.-->
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">Your API key here</string>
 </resources>
